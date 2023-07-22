@@ -1,9 +1,26 @@
 from flask import Flask
 from scipy.optimize import linprog
+import pandas as pd
+import sys
+from flask import current_app
 
 app = Flask(__name__)
 
-test = "qweqweqwe" 
+def prepareData(drivers):
+    drivers = drivers.dropna(axis=1, how='all')
+    drivers['total'] = drivers['r0'] + drivers['r1'] + drivers['r2'] + drivers['r3'] + drivers['r4'] + drivers['r5'] + drivers['r6'] + drivers['r7'] + drivers['r8'] + drivers['r9'] + drivers['r10']
+    return drivers
+
+drivers = pd.read_excel('./data/test.xlsx', index_col=0, header=0) # TODO: Make path OS agnostic
+drivers['total'] = drivers['r1'] * 10
+app.drivers = prepareData(drivers)
+
+
+@app.route("/drivers")
+def drivers():
+    print(current_app.drivers.head(5), file=sys.stderr)
+    #print(current_app.drivers.dtypes, file=sys.stderr)
+    return "qweqwe"
 
 @app.route("/")
 def hello_world():
