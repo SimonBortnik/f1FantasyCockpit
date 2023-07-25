@@ -14,7 +14,6 @@ def prepareData(drivers, constructors):
     # Prepare overview df
     driversOverview = drivers.copy().dropna(axis=1, how='all')
     constructorsOverview = constructors.copy().dropna(axis=1, how='all')
-
     return driversOverview, driversPoints, constructorsOverview, constructorsPoints
 
 drivers = pd.read_excel('./data/test.xlsx', index_col=0, header=0) # TODO: Make path OS agnostic
@@ -55,8 +54,12 @@ def getResultString(results):
 
     # Handle drivers
     driversResults = results[0:20]
-    for x in range(len(driversResults)):
-        if(driversResults[x] == 1):
+    print(driversResults)
+    print('driversResults:^^^^^^^^^^^^')
+    for x, res in enumerate(driversResults):
+        print(int(driversResults[x]))
+        # For some reason which is beyond me the integer decision variable is returned as a float, hence we cast
+        if int(driversResults[x]) == 1:
             namesArray.append(app.driversOverview.index[x])
     returnString = 'Optimal driver picks are:'
     for i in range(0, len(namesArray)):
@@ -89,18 +92,19 @@ def drivers():
 
 @app.route("/")
 def hello_world():
-    c = getMinimizeArr(app.driversPoints.sum().to_list() + app.constructorsPoints.sum().to_list())
+    c = getMinimizeArr(app.driversPoints.tail(5).sum().to_list() + app.constructorsPoints.tail(5).sum().to_list())
 
     # Lesser than constraints
     A_ub = [getCostArray()]
-    b_ub = [100]
+    b_ub = [103.4]
 
     #Equality contraints
     A_eq = [getDriversDecisionArray(1) + getConstructorsDecisionArray(0), getDriversDecisionArray(0) + getConstructorsDecisionArray(1)]
     b_eq = [5, 2]
 
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=getBoundsArray(), integrality=1)
+    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=(0, 1), integrality=1)
 
     print(res.x)
+    print('Results: ^^^^^^^^^^^^^^^^^^^^')
     return f'<p>{getResultString(res.x)}</p>'
     #return f'<p>Stand by</p>'
