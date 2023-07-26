@@ -102,8 +102,9 @@ def hello_world():
     A_eq = [getDriversDecisionArray(1) + getConstructorsDecisionArray(0), getDriversDecisionArray(0) + getConstructorsDecisionArray(1)]
     b_eq = [5, 2]
 
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=(0, 1), integrality=1)
+    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=(0, 1), integrality=1, method='highs')
 
+    print(res.status)
     print(res.x)
     print('Results: ^^^^^^^^^^^^^^^^^^^^')
     return f'<p>{getResultString(res.x)}</p>'
