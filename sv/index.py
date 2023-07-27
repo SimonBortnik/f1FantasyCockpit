@@ -1,8 +1,7 @@
 from flask import Flask
 from scipy.optimize import linprog
 import pandas as pd
-import sys
-from flask import current_app
+from mip import *
 
 app = Flask(__name__)
 
@@ -57,7 +56,6 @@ def getResultString(results):
     print(driversResults)
     print('driversResults:^^^^^^^^^^^^')
     for x, res in enumerate(driversResults):
-        print(int(driversResults[x]))
         # For some reason which is beyond me the integer decision variable is returned as a float, hence we cast
         if int(driversResults[x]) == 1:
             namesArray.append(app.driversOverview.index[x])
@@ -90,13 +88,13 @@ def CostString():
 def drivers():
     return "qweqwe"
 
-@app.route("/")
+@app.route("/old")
 def hello_world():
     c = getMinimizeArr(app.driversPoints.tail(5).sum().to_list() + app.constructorsPoints.tail(5).sum().to_list())
 
     # Lesser than constraints
     A_ub = [getCostArray()]
-    b_ub = [103.4]
+    b_ub = [102.9]
 
     #Equality contraints
     A_eq = [getDriversDecisionArray(1) + getConstructorsDecisionArray(0), getDriversDecisionArray(0) + getConstructorsDecisionArray(1)]
@@ -104,8 +102,67 @@ def hello_world():
 
     res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=(0, 1), integrality=1, method='highs')
 
-    print(res.status)
+    print('Status: ' + str(res.status))
     print(res.x)
     print('Results: ^^^^^^^^^^^^^^^^^^^^')
     return f'<p>{getResultString(res.x)}</p>'
     #return f'<p>Stand by</p>'
+
+@app.route('/')
+def simplex():
+    m = Model()
+    x = [ m.add_var(var_type=BINARY, name='driver' + str(i)) for i in range(30) ]
+    points = app.driversPoints.tail(5).sum().to_list() + app.constructorsPoints.tail(5).sum().to_list()
+    cost = getCostArray()
+    print(points)
+    print(cost)
+
+    m.objective = maximize(xsum(points[i] * x[i] for i in range(30)))
+    m += xsum(cost[i] * x[i] for i in range(30)) <= 103.4
+    m += xsum(x[i] for i in range(20)) == 5
+    m += xsum(x[i + 20] for i in range(10)) == 2
+
+    m.optimize()
+    selected = [i for i in range(30) if x[i].x >= 0.99]
+    print(selected)
+    return f'<p>{newgetResultString(selected)}</p>'
+
+def newgetResultString(results):
+    # Get sub arrays for drivers and constructors
+    driverResults = results[0:5]
+    constructorResults = results[5:7]
+    
+    # Get names for selected drivers and constructors
+    drivers = []
+    constructors = []
+    for i, v in enumerate(driverResults):
+        drivers.append(app.driversOverview.index[v])
+        print(app.driversOverview.index[v])
+    for i, v in enumerate(constructorResults):
+        constructors.append(app.constructorsOverview.index[v - 20])
+        print(app.constructorsOverview.index[v - 20])
+    
+    # Construct human readable string
+    resultString = 'Optimal drivers are:'
+    for i, name in enumerate(drivers):
+        resultString += ' ' + name
+        if(i < 4):
+            resultString += ','
+    resultString += ' ||| '
+    resultString += 'Optimal constructors are:'
+    for i, name in enumerate(constructors):
+        resultString += ' ' + name
+        if(i < 1):
+            resultString += ','
+    resultString += ' ||| '
+    resultString += 'Asset cost are: ' + str(getTeamCost(driverResults, constructorResults)) + ' mil. $'
+    print(resultString)
+    return resultString
+
+def getTeamCost(driverPicks, constrctorPicks):
+    cost = 0
+    for i, v in enumerate(driverPicks):
+        cost += app.driversOverview.iloc[v]['cost']
+    for i, v in enumerate(constrctorPicks):
+        cost += app.constructorsOverview.iloc[v - 20]['cost']
+    return cost
