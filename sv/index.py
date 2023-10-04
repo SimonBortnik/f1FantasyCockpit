@@ -23,7 +23,7 @@ def getCostArray():
 
 @app.route('/')
 def simplex():
-    races = 3
+    races = 5
     m = Model()
     x = [ m.add_var(var_type=BINARY, name='driver' + str(i)) for i in range(30) ] # TODO: Correct naming for constructors
     points = app.driversPoints.tail(races).sum().to_list() + app.constructorsPoints.tail(races).sum().to_list()
@@ -34,18 +34,20 @@ def simplex():
     # Objective function
     m.objective = maximize(xsum(points[i] * x[i] for i in range(30)))
     # Cost cap
-    m += xsum(cost[i] * x[i] for i in range(30)) <= 103.4
+    m += xsum(cost[i] * x[i] for i in range(30)) <= 117.8
     # Pick exactly 5 drivers
     m += xsum(x[i] for i in range(20)) == 5
     # Pick exactly 2 constructors
     m += xsum(x[i + 20] for i in range(10)) == 2
 
     # Picks that neeed to be included
-    m+= x[0] == 1 #albon
-    #m+= x[3] == 0
-    #m+= x[8] == 1 #norris
-    m+= x[11] == 1 #verstappen
+    #m+= x[0] == 1 #albon
+    #m+= x[3] == 1 #alonso
+    #m+= x[8] == 0 #norris
+    #m+= x[11] == 1 #verstappen
+    #m+= x[13] == 0 #ricardo/lawson
     #m+= x[14] == 1 #piastri
+    #m+= x[15] == 0 #gasly
     #m+= x[26] == 1 #mcLaren
 
     m.verbose = 0
