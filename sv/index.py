@@ -34,7 +34,7 @@ def simplex():
     # Objective function
     m.objective = maximize(xsum(points[i] * x[i] for i in range(30)))
     # Cost cap
-    m += xsum(cost[i] * x[i] for i in range(30)) <= 117.8
+    #m += xsum(cost[i] * x[i] for i in range(30)) <= 130.8
     # Pick exactly 5 drivers
     m += xsum(x[i] for i in range(20)) == 5
     # Pick exactly 2 constructors
@@ -43,7 +43,8 @@ def simplex():
     # Picks that neeed to be included
     #m+= x[0] == 1 #albon
     #m+= x[3] == 1 #alonso
-    #m+= x[8] == 0 #norris
+    #m+= x[7] == 0 #stroll
+    ##m+= x[8] == 1 #norris
     #m+= x[11] == 1 #verstappen
     #m+= x[13] == 0 #ricardo/lawson
     #m+= x[14] == 1 #piastri
