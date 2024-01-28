@@ -1,12 +1,16 @@
 //import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import TeamDisplay from './components/TeamDisplay';
 import ParameterControls from './components/parameterControls/ParameterControls';
 
 function App() {
+  const [costCap, setCostCap] = useState(100)
+
   return (
     <div className="App">
-      <ParameterControls/>
-      
+      <ParameterControls costCap={costCap} setCostCap={setCostCap}/>
+      <TeamDisplay costCap={costCap}/>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

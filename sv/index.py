@@ -1,8 +1,11 @@
 from flask import Flask
+from flask import request
 import pandas as pd
 from mip import *
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app) # TODO: Check environment to only allow this in dev
 
 def prepareData(drivers, constructors):
     # Prepare calculation dataframe
@@ -21,8 +24,13 @@ app.driversOverview, app.driversPoints, app.constructorsOverview, app.constructo
 def getCostArray():
     return app.driversOverview['cost'].to_numpy().tolist() + app.constructorsOverview['cost'].to_numpy().tolist()
 
+@app.route('/test/')
+def test():
+    return {'test': 'hi'}
+
 @app.route('/')
 def simplex():
+    costCap = float(request.args.get('costCap'))
     races = 5
     m = Model()
     x = [ m.add_var(var_type=BINARY, name='driver' + str(i)) for i in range(30) ] # TODO: Correct naming for constructors
@@ -34,7 +42,7 @@ def simplex():
     # Objective function
     m.objective = maximize(xsum(points[i] * x[i] for i in range(30)))
     # Cost cap
-    #m += xsum(cost[i] * x[i] for i in range(30)) <= 130.8
+    m += xsum(cost[i] * x[i] for i in range(30)) <= costCap
     # Pick exactly 5 drivers
     m += xsum(x[i] for i in range(20)) == 5
     # Pick exactly 2 constructors
@@ -55,7 +63,31 @@ def simplex():
     m.optimize()
     selected = [i for i in range(30) if x[i].x >= 0.99]
     print(selected)
-    return f'<p>{getResultString(selected, races)}</p>'
+    #return f'<p>{getResultString(selected, races)}</p>'
+    return getResultObject(selected, races)
+
+def getResultObject(results, races):
+    # Get sub arrays for drivers and constructors
+    driverResults = results[0:5]
+    constructorResults = results[5:7]
+
+    # Get names for selected drivers and constructors
+    drivers = []
+    constructors = []
+    for i, v in enumerate(driverResults):
+        drivers.append(app.driversOverview.index[v])
+        print(app.driversOverview.index[v])
+    for i, v in enumerate(constructorResults):
+        constructors.append(app.constructorsOverview.index[v - 20])
+        print(app.constructorsOverview.index[v - 20])
+
+    # Construct response object
+    return {
+        'drivers': drivers,
+        'constructors': constructors,
+        'cost': getTeamCost(driverResults, constructorResults),
+        'projectedPoints': getProjectedPoints(driverResults, constructorResults, races)
+    }
 
 def getResultString(results, races):
     # Get sub arrays for drivers and constructors

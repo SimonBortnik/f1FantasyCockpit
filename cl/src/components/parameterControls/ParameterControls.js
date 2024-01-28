@@ -10,14 +10,18 @@ import { Grid, InputAdornment } from '@mui/material';
 
 const Input = styled(MuiInput)`width: 42px;`;
 
-export default function ParameterControls() {
-    const [costCap, setCostCap] = useState(15)
+export default function ParameterControls({costCap, setCostCap}) {
+    const [internalCostCap, setInternalCostCap] = useState(costCap)
 
     const handleChange = (e) => {
+        setInternalCostCap(Number(e.target.value))
+    }
+
+    const handleBlur = e => {
         setCostCap(Number(e.target.value))
     }
 
-    const toLabel = (val) => `${val} $`
+    const toLabel = (val) => `${val} $ (mil)`
     return (
         <Card className='control-card'>
             <Typography variant="h5" component="div">
@@ -25,10 +29,10 @@ export default function ParameterControls() {
             </Typography>
             <Grid container>
                 <Grid item xs={10}>
-                    <Slider value={costCap} onChange={handleChange} min={0} max={200} valueLabelDisplay="auto" valueLabelFormat={toLabel}/> 
+                    <Slider value={internalCostCap} onChange={handleChange} onBlur={handleBlur} min={0} max={200} step={0.1} valueLabelDisplay="auto" valueLabelFormat={toLabel}/> 
                 </Grid>
                 <Grid item xs={2}>
-                    <Input value={costCap} min={0} max={200} type='number' onChange={handleChange} endAdornment={<InputAdornment position='end'>$</InputAdornment>} fullWidth className='test'/>
+                    <Input value={internalCostCap} min={0} max={200} type='number' onChange={handleChange} endAdornment={<InputAdornment position='end'>$ (mil)</InputAdornment>} fullWidth className='test'/>
                 </Grid>
             </Grid>
         </Card>
