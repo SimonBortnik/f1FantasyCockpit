@@ -50,6 +50,8 @@ export default function ParameterControls({costCap, setCostCap, excludedDrivers,
     }
 
     const toLabel = (val) => `${val} $ (mil)`
+
+
     return (
         <Card className='control-card'>
             <Typography variant="h5" component="div">
@@ -57,10 +59,10 @@ export default function ParameterControls({costCap, setCostCap, excludedDrivers,
             </Typography>
             <Grid container>
                 <Grid item xs={12} md={8}>
-                    <Slider value={internalCostCap} onChange={handleChange} onBlur={handleBlur} min={0} max={200} step={0.1} valueLabelDisplay="auto" valueLabelFormat={toLabel}/> 
+                    <Slider value={internalCostCap} onChange={handleChange} onBlur={handleBlur} min={0} max={400} step={0.1} valueLabelDisplay="auto" valueLabelFormat={toLabel}/> 
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <Input className='input-field' fullWidth value={internalCostCap} min={0} max={200} type='number' onChange={handleChange} endAdornment={<InputAdornment position='end'>$ (mil)</InputAdornment>}/>
+                    <Input className='input-field' fullWidth value={internalCostCap} min={0} max={400} type='number' onChange={handleChange} endAdornment={<InputAdornment position='end'>$ (mil)</InputAdornment>}/>
                 </Grid>
                 <Grid item xs={12} md={12}>
                     <FormControl className='multi-select'>

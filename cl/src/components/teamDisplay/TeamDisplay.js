@@ -37,10 +37,13 @@ export default function TeamDisplay({costCap, excludedDrivers, excludedConstruct
             <Button onClick={handleCalculate} variant="outlined">Calculate</Button>
             {noSolutionFound && <p>No solution found, reajust paramters</p>}
             {(!noSolutionFound && cost !== 0) && <>
-            <p>{round(cost)}</p>
+            <p>Price: {round(cost)}$ (mil)</p>
+            <p>Projected Points: {round(projectedPoints)}</p>
+            <p>Drivers:</p>
             <div className="chip-holder">{renderDrivers()}</div>
+            <p>Constructors:</p>
             <div className="chip-holder">{renderConstructors()}</div>
-            <p>{round(projectedPoints)}</p></>}
+            </>}
         </Card>
     )
 }
