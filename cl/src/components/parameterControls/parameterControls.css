@@ -2,6 +2,20 @@
     padding: 12px 12px;
   }
 
-.test {
-  width: 75% !important
+.multi-select {
+  width: 100%;
+  margin-top: 0.8rem !important;
+}
+
+.multi-select-display {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.multi-select-display-chip {
+  margin: 0.2rem;
+}
+
+.input-field {
+  width: 90% !important; 
 }

@@ -1,0 +1,9 @@
+.chip-holder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0.5rem 0;
+}
+.chip {
+    margin:  0.2rem;
+}

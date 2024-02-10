@@ -1,30 +1,31 @@
 //import logo from './logo.svg';
 import { useState } from 'react';
 import './App.css';
-import TeamDisplay from './components/TeamDisplay';
+import TeamDisplay from './components/teamDisplay/TeamDisplay';
 import ParameterControls from './components/parameterControls/ParameterControls';
+import { Grid } from '@mui/material';
 
 function App() {
   const [costCap, setCostCap] = useState(100)
+  const [excludedDrivers, setExcludedDrivers] = useState([])
+  const [excludedConstructors, setExcludedConstructors] = useState([])
+  const [includedDrivers, setIncludedDrivers] = useState([])
+  const [includedConstructors, setIncludedConstructors] = useState([])
 
   return (
     <div className="App">
-      <ParameterControls costCap={costCap} setCostCap={setCostCap}/>
-      <TeamDisplay costCap={costCap}/>
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={5}>
+          <ParameterControls costCap={costCap} setCostCap={setCostCap} excludedDrivers={excludedDrivers} setExcludedDrivers={setExcludedDrivers} 
+            excludedConstructors={excludedConstructors} setExcludedConstructors={setExcludedConstructors} 
+            includedDrivers={includedDrivers} setIncludedDrivers={setIncludedDrivers}
+            includedConstructors={includedConstructors} setIncludedConstructors={setIncludedConstructors}
+          />
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <TeamDisplay costCap={costCap} excludedDrivers={excludedDrivers} excludedConstructors={excludedConstructors} includedDrivers={includedDrivers} includedConstructors={includedConstructors}/>
+        </Grid>
+      </Grid>
     </div>
   );
 }
