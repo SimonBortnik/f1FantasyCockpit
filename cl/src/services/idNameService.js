@@ -19,8 +19,8 @@ nameDirectory.set('sainz', 'Carlos Sainz')
 nameDirectory.set('perez', 'Sergio Pérez')
 nameDirectory.set('bottas', 'Valtteri Bottas')
 nameDirectory.set('tsunoda', 'Yuki Tsunoda')
-nameDirectory.set('Alfa Romeo', 'Alfa Romeo')
-nameDirectory.set('AlphaTauri', 'Alpha Tauri')
+nameDirectory.set('Sauber', 'Kick Sauber')
+nameDirectory.set('RB', 'RB Visa')
 nameDirectory.set('Alpine', 'Alpine')
 nameDirectory.set('Aston Martin', 'Aston Martin')
 nameDirectory.set('Ferrari', 'Ferrari')
@@ -33,4 +33,4 @@ nameDirectory.set('Williams', 'Williams')
 export const driverIds = ['albon', 'leclerc','ocon', 'alonso', 'russel', 'zhou', 'magnussen', 'stroll', 'norris', 'hamilton', 'sargeant', 'verstappen', 'hulkenberg',
     'ricardo', 'piastri', 'gasly', 'sainz', 'perez', 'bottas', 'tsunoda']
 
-export const constructorIds =['Alfa Romeo', 'AlphaTauri', 'Alpine', 'Aston Martin', 'Ferrari', 'Haas', 'McLaren', 'Mercedes', 'Red Bull', 'Williams']
+export const constructorIds =['Sauber', 'RB', 'Alpine', 'Aston Martin', 'Ferrari', 'Haas', 'McLaren', 'Mercedes', 'Red Bull', 'Williams']
