@@ -10,12 +10,12 @@ CORS(app) # TODO: Check environment to only allow this in dev
 
 def prepareData(drivers, constructors):
     # Prepare calculation dataframe
-    driversPoints = drivers.copy().drop(['cost'], axis=1).drop(['r5'], axis=1).dropna(axis=1, how='all').transpose() # TODO: Drop race woth no starts
-    constructorsPoints = constructors.copy().drop(['cost'], axis=1).drop(['r5'], axis=1).dropna(axis=1, how='all').transpose() # TODO: Drop race woth no starts
+    driversPoints = drivers.copy().drop(['cost'], axis=1).dropna(axis=1, how='all').transpose() # TODO: Drop race woth no starts
+    constructorsPoints = constructors.copy().drop(['cost'], axis=1).dropna(axis=1, how='all').transpose() # TODO: Drop race woth no starts
 
     # Prepare overview df
-    driversOverview = drivers.copy().dropna(axis=1, how='all').drop(['r5'], axis=1)
-    constructorsOverview = constructors.copy().dropna(axis=1, how='all').drop(['r5'], axis=1)
+    driversOverview = drivers.copy().dropna(axis=1, how='all')
+    constructorsOverview = constructors.copy().dropna(axis=1, how='all')
     return driversOverview, driversPoints, constructorsOverview, constructorsPoints
 
 drivers = pd.read_excel('./data/test.xlsx', index_col=0, header=0) # TODO: Make path OS agnostic
